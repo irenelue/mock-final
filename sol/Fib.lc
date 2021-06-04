@@ -1,0 +1,66 @@
+-------------------------------------------------------------------------------
+-- DO NOT MODIFY THIS SEGMENT
+-------------------------------------------------------------------------------
+
+let TODO   = \i g n o r e -> i g n o r e
+
+let TRUE  = \x y -> x
+let FALSE = \x y -> y
+let ITE   = \b x y -> b x y
+let NOT   = \b x y -> b y x
+let AND   = \x y -> ITE x y FALSE
+let OR    = \x y -> ITE x TRUE y
+
+let PAIR = \x y -> (\b -> b x y)
+let FST  = \p -> p TRUE
+let SND  = \p -> p FALSE
+
+let ZERO  = \f x -> x
+let ONE   = \f x -> f x
+let TWO   = \f x -> f (f x)
+let THREE = \f x -> f (f (f x))
+let FOUR  = \f x -> f (f (f (f x)))
+let FIVE  = \f x -> f (f (f (f (f x))))
+let SIX   = \f x -> f (f (f (f (f (f x)))))
+let SEVEN = \f x -> f (f (f (f (f (f (f x))))))
+let EIGHT = \f x -> f (f (f (f (f (f (f (f x)))))))
+
+let INC   = \n -> \f x -> f (n f x)
+let ADD   = \n m -> n INC m
+let MUL   = \n m -> n (ADD m) ZERO
+let ISZ   = \n -> n (\z -> FALSE) TRUE
+let SKIP1 = \f p -> PAIR TRUE (ITE (FST p) (f (SND p)) (SND p))
+let DEC   = \n   -> SND (n (SKIP1 INC) (PAIR FALSE ZERO))
+let SUB   = \n m -> m DEC n
+let LEQ   = \n m -> ISZ (SUB n m)
+let EQ    = \n m -> AND (LEQ n m) (LEQ m n)
+
+let FIX   = \stp -> (\x -> stp (x x)) (\x -> stp (x x))
+
+-------------------------------------------------------------------------------
+-- Task 1: WRITE YOUR CODE HERE 
+-------------------------------------------------------------------------------
+
+let STEP   = \p -> PAIR (ADD (FST p) (SND p)) (FST p)
+
+let FIB    = \n -> SND (n STEP (PAIR ONE ZERO))
+
+-------------------------------------------------------------------------------
+-- TESTS (DO NOT MODIFY THIS SEGMENT)
+-------------------------------------------------------------------------------
+
+eval fib0:
+  FIB ZERO
+  =~> ZERO
+  
+eval fib1:
+  FIB ONE
+  =~> ONE
+  
+eval fib2:
+  FIB TWO
+  =~> ONE
+
+eval fib5:
+  FIB FIVE
+  =~> FIVE
